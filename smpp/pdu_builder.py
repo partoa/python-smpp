@@ -164,6 +164,10 @@ class Unbind(PDU):
         super(Unbind, self).__init__('unbind', 'ESME_ROK', sequence_number, **kwargs)
 
 
+class UnbindResp(PDU):
+    def __init__(self, sequence_number, **kwargs):
+        super(UnbindResp, self).__init__('unbind_resp', 'ESME_ROK', sequence_number, **kwargs)
+        
 class SM1(PDU):
     def __init__(self,
             command_id,
