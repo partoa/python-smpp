@@ -378,3 +378,10 @@ class QuerySM(PDU):
 #print json.dumps(unpack_pdu(sm.get_bin()), indent=4, sort_keys=True)
 #sm.add_message_payload('616263646566676869')
 #print json.dumps(unpack_pdu(sm.get_bin()), indent=4, sort_keys=True)
+
+def to_object(pdu_dict):
+    pdu = PDU(command_id=pdu_dict['header']['command_id'],
+              command_status=pdu_dict['header']['command_status'],
+              sequence_number=pdu_dict['header']['sequence_number'])
+    pdu.obj = pdu_dict
+    return pdu
