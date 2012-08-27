@@ -15,6 +15,17 @@ class PDU(object):
         self.obj['header']['command_status'] = command_status
         self.obj['header']['sequence_number'] = sequence_number
 
+    @property
+    def sequence_number(self):
+        return self.obj['header']['sequence_number']
+
+    @property
+    def command_id(self):
+        return self.obj['header']['command_id']
+
+    @property
+    def command_status(self):
+        return self.obj['header']['command_status']
 
     def __add_optional_parameter(self, tag, value):
         if self.obj.get('body') == None:
@@ -48,6 +59,13 @@ class PDU(object):
     def get_bin(self):
         return pack_pdu(self.obj)
 
+    def __getitem__(self, key):
+        return self.obj[key]
+
+    def __repr__(self):
+        return 'PDU(%r, %r, %r)' % (self.command_id, self.command_status, self.sequence_number)
+    def __str__(self):
+        return '%s #%d [%s]' % (self.command_id, self.sequence_number, self.command_status)
 
 class Bind(PDU):
     def __init__(self,
