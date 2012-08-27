@@ -93,7 +93,7 @@ class ESME(object):
 
     def submit_sm(self, **kwargs):
         if self.state in ['BOUND_TX', 'BOUND_TRX']:
-            self.logger.info('submit_sm %s', dict(self.defaults, **kwargs))
+            self.logger.debug('submit_sm %s', dict(self.defaults, **kwargs))
             pdu = SubmitSM(self.sequence_number, **dict(self.defaults, **kwargs))
             self.conn.send(pdu.get_bin())
             self.sequence_number +=1
@@ -142,7 +142,7 @@ class TransceiverESME(ESME):
         while True:
             pdu = self._recv()
             if pdu is not None:
-                self.logger.info('received %s', pdu)
+                self.logger.debug('received %s', pdu)
                 self._handleInPDU(pdu)
             else:
                 self.disconnect()
@@ -166,13 +166,13 @@ class TransceiverESME(ESME):
 
     def _handle_unbind(self, pdu, **kwargs):
         pdu = UnbindResp(pdu.sequence_number, **dict(self.defaults, **kwargs))
-        self.logger.info('unbind_resp %s', pdu)
+        self.logger.debug('unbind_resp %s', pdu)
         self.conn.send(pdu.get_bin())
         self.state = 'OPEN'
         self.disconnect()
 
     def _handle_deliver_sm(self, pdu, **kwargs):
-        self.logger.info('deliver_sm %s', pdu)
+        self.logger.debug('deliver_sm %s', pdu)
         try:
             self.on_receive_sm(pdu)
         except:
@@ -180,14 +180,14 @@ class TransceiverESME(ESME):
             self.logger.warning('not confirming sm processing')
         else:
             pdu = DeliverSMResp(pdu.sequence_number, **dict(self.defaults, **kwargs))
-            self.logger.info('deliver_sm_resp %s', pdu)
+            self.logger.debug('deliver_sm_resp %s', pdu)
 
     def on_receive_sm(self, pdu):
         short_message = pdu['body']['mandatory_parameters']['short_message']
         self.logger.info('short message: %s', short_message)
 
     def _handle_data_sm(self, pdu):
-        self.logger.info('data_sm %s', pdu.obj)
+        self.logger.critical('data_sm %s', pdu.obj)
         raise NotImplementedError()
 
     def _handle_alert_notification(self, pdu):
@@ -224,7 +224,7 @@ class TransceiverESME(ESME):
             sequence_number = self.sequence_number
             self.sequence_number +=1
             pdu = SubmitSM(sequence_number, **dict(self.defaults, **kwargs))
-            self.logger.info('submit_sm %s', pdu)
+            self.logger.debug('submit_sm %s', pdu)
             self.conn.send(pdu.get_bin())
             submit_sm_resp = self.asyncRes(sequence_number)
             #print self._is_ok(submit_sm_resp, 'submit_sm_resp')
@@ -283,7 +283,7 @@ class TransceiverESME(ESME):
             sequence_number = self.sequence_number
             self.sequence_number +=1
             pdu = EnquireLink(sequence_number, **dict(self.defaults, **kwargs))
-            self.logger.info('enquire_link_resp %s', pdu)
+            self.logger.debug('enquire_link_resp %s', pdu)
             self.conn.send(pdu.get_bin())
             if not self._is_ok(self.asyncRes(sequence_number), 'enquire_link_resp'):
                 self.disconnect()
