@@ -65,7 +65,7 @@ class ESME(object):
         if isinstance(pdu, dict) \
                and pdu.get('header',{}).get('command_status') == 'ESME_ROK' \
                and (id_check == None
-                    or id_check == pdu['header'].get('command_id'))):
+                    or id_check == pdu['header'].get('command_id')) :
             return True
         else:
             return False
