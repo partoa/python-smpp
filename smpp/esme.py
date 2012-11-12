@@ -205,9 +205,9 @@ class TransceiverESME(ESME):
 
     def disconnect(self):
         if self.state in ['BOUND_TX', 'BOUND_RX', 'BOUND_TRX']:
-            super(TransceiverESME, self), disconnect()
+            super(TransceiverESME, self).disconnect()
         if self.state in ['OPEN']:
-            super(TransceiverESME, self), disconnect()
+            super(TransceiverESME, self).disconnect()
             self._greenlet.kill()
 
     def _unbind(self):
