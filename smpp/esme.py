@@ -180,6 +180,7 @@ class TransceiverESME(ESME):
             self.logger.warning('not confirming sm processing')
         else:
             pdu = DeliverSMResp(pdu.sequence_number, **dict(self.defaults, **kwargs))
+            self.conn.send(pdu.get_bin())
             self.logger.debug('deliver_sm_resp %s', pdu)
 
     def on_receive_sm(self, pdu):
